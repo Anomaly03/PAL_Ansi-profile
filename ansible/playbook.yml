@@ -1,0 +1,46 @@
+---
+# ═══════════════════════════════════════════════════════════════════
+#  Ansible Playbook — Deploy Web Profile with Docker Load Balancer
+# ═══════════════════════════════════════════════════════════════════
+#
+#  Architecture:
+#
+#    Internet  ──►  [Load Balancer :9000]
+#                         │
+#              ┌──────────┴──────────┐
+#              ▼                     ▼
+#      [webprofile_1 :9001]   [webprofile_2 :9002]
+#
+#  All three containers share the Docker network "webprofile_net".
+#
+# ═══════════════════════════════════════════════════════════════════
+
+- name: Deploy Web Profile Stack
+  hosts: webservers
+  become: yes         # run tasks as root (required for Docker install)
+
+  # ── Variables ────────────────────────────────────────────────────
+  vars:
+    lb_port:   9000   # public-facing port
+    app1_port: 9001   # app container 1 debug port
+    app2_port: 9002   # app container 2 debug port
+
+  # ── Roles (executed in order) ────────────────────────────────────
+  roles:
+    - docker_install  # Ensure Docker is installed
+    - build_app       # Copy source & build image
+    - deploy_app      # Launch the two app containers
+    - deploy_lb       # Launch the Nginx load balancer
+
+  # ── Final summary ────────────────────────────────────────────────
+  post_tasks:
+    - name: Deployment Summary
+      debug:
+        msg:
+          - "════════════════════════════════════════"
+          - " Deployment Complete!"
+          - "════════════════════════════════════════"
+          - " Load Balancer : http://{{ inventory_hostname }}:{{ lb_port }}"
+          - " Container 1   : http://{{ inventory_hostname }}:{{ app1_port }}"
+          - " Container 2   : http://{{ inventory_hostname }}:{{ app2_port }}"
+          - "════════════════════════════════════════"

@@ -1,0 +1,43 @@
+---
+# ─────────────────────────────────────────────────────────────────
+# Role: deploy_lb
+# Tasks: Deploy the Nginx load balancer container
+# ─────────────────────────────────────────────────────────────────
+
+- name: Create remote directory for Nginx config
+  file:
+    path: /opt/webprofile/nginx
+    state: directory
+    mode: '0755'
+
+- name: Copy Nginx config to target host
+  copy:
+    src: "{{ playbook_dir }}/../nginx/nginx.conf"
+    dest: /opt/webprofile/nginx/nginx.conf
+    mode: '0644'
+
+- name: Start Nginx load balancer container
+  community.docker.docker_container:
+    name: webprofile_lb
+    image: nginx:alpine
+    state: started
+    restart_policy: always
+    networks:
+      - name: webprofile_net    # same network as the app containers
+    ports:
+      - "9000:80"               # port 9000 on host → 80 in container (public entry point)
+    volumes:
+      - /opt/webprofile/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+- name: Wait for load balancer to be healthy
+  uri:
+    url: http://localhost:9000/lb-health
+    status_code: 200
+  register: lb_health
+  retries: 5
+  delay: 3
+  until: lb_health.status == 200
+
+- name: Print load balancer status
+  debug:
+    msg: "Load balancer is UP at http://{{ inventory_hostname }}:9000"

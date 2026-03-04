@@ -1,0 +1,23 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ansible retry files
+*.retry
+
+# OS / editor files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Docker build cache (not needed in repo)
+/opt/webprofile/

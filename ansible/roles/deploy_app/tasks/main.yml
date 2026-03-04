@@ -1,0 +1,51 @@
+---
+# ─────────────────────────────────────────────────────────────────
+# Role: deploy_app
+# Tasks: Start two web profile containers on the Docker network
+# ─────────────────────────────────────────────────────────────────
+
+- name: Create a dedicated Docker network for the stack
+  community.docker.docker_network:
+    name: webprofile_net
+    state: present
+
+- name: Start web container 1 (webprofile_1)
+  community.docker.docker_container:
+    name: webprofile_1
+    image: webprofile:latest
+    state: started
+    restart_policy: always
+    networks:
+      - name: webprofile_net
+    ports:
+      - "9001:8080"          # port 9001 on host → 8080 in container
+    env:
+      CONTAINER_NAME: "webprofile_1"
+      PORT: "8080"
+
+- name: Start web container 2 (webprofile_2)
+  community.docker.docker_container:
+    name: webprofile_2
+    image: webprofile:latest
+    state: started
+    restart_policy: always
+    networks:
+      - name: webprofile_net
+    ports:
+      - "9002:8080"          # port 9002 on host → 8080 in container
+    env:
+      CONTAINER_NAME: "webprofile_2"
+      PORT: "8080"
+
+- name: Verify containers are running
+  community.docker.docker_container_info:
+    name: "{{ item }}"
+  loop:
+    - webprofile_1
+    - webprofile_2
+  register: container_info
+
+- name: Print container status
+  debug:
+    msg: "{{ item.item }} → {{ item.container.State.Status }}"
+  loop: "{{ container_info.results }}"
