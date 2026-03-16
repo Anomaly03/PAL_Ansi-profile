@@ -4,6 +4,11 @@
 # Tasks: Start two web profile containers on the Docker network
 # ─────────────────────────────────────────────────────────────────
 
+- name: Remove existing network if present
+  community.docker.docker_network:
+    name: webprofile_net
+    state: absent
+
 - name: Create a dedicated Docker network for the stack
   community.docker.docker_network:
     name: webprofile_net
@@ -50,20 +55,23 @@
     env:
       CONTAINER_NAME: "webprofile_3"
       PORT: "8080"
-  when: inventory_hostname != 'localhost'
+  run_once: true
+  delegate_to: webserver2
 
 - name: Verify containers are running
   community.docker.docker_container_info:
     name: "{{ item }}"
   loop: "{{ container_list }}"
   register: container_info
+  #vars:
+  #  container_list: >-
+  #    {% if inventory_hostname == 'localhost' %}
+  #      ['webprofile_1', 'webprofile_2']
+  #    {% else %}
+  #      ['webprofile_3']
+  #    {% endif %}
   vars:
-    container_list: |
-      {%- if inventory_hostname == 'localhost' -%}
-        ['webprofile_1', 'webprofile_2']
-      {%- else -%}
-        ['webprofile_3']
-      {%- endif -%}
+    container_list: "{{ ['webprofile_1','webprofile_2'] if inventory_hostname == 'localhost' else ['webprofile_3'] }}"
 
 - name: Print container status
   debug:

@@ -28,7 +28,9 @@
       - "9000:80" # port 9000 on host → 80 in container (public entry point)
     volumes:
       - /opt/webprofile/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-  when: inventory_hostname == 'localhost'
+  #when: inventory_hostname == 'localhost'
+  run_once: true
+  delegate_to: localhost
 
 - name: Wait for load balancer to be healthy
   uri:
@@ -38,9 +40,12 @@
   retries: 5
   delay: 3
   until: lb_health.status == 200
-  when: inventory_hostname == 'localhost'
+  #when: inventory_hostname == 'localhost'
+  run_once: true
+  delegate_to: localhost
 
 - name: Print load balancer status
   debug:
     msg: "Load balancer is UP at http://{{ inventory_hostname }}:9000"
-  when: inventory_hostname == 'localhost'
+  run_once: true
+  delegate_to: localhost

@@ -41,6 +41,10 @@
 
   # ── Final summary ────────────────────────────────────────────────
   post_tasks:
+    # ── Post-deployment health check ───────────────────────────────────
+    - name: Run load-balancer health check
+      import_role:
+        name: test
     - name: Deployment Summary
       debug:
         msg:
