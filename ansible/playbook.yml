@@ -1,36 +1,43 @@
 ---
 # ═══════════════════════════════════════════════════════════════════
-#  Ansible Playbook — Deploy Web Profile with Docker Load Balancer
+#  Ansible Playbook — Deploy Web Profile Stack (Multi-Node)
 # ═══════════════════════════════════════════════════════════════════
 #
 #  Architecture:
 #
-#    Internet  ──►  [Load Balancer :9000]
+#    Internet  ──►  [Load Balancer localhost:9000]
 #                         │
-#              ┌──────────┴──────────┐
-#              ▼                     ▼
-#      [webprofile_1 :9001]   [webprofile_2 :9002]
+#              ┌──────────┼──────────┐
+#              ▼          ▼          ▼
+#    [webprofile_1    [webprofile_2 [webprofile_3
+#     localhost:9001]  localhost:9002] webserver2:9003]
 #
-#  All three containers share the Docker network "webprofile_net".
+#  Three containers distributed across two nodes:
+#  - Node 1 (localhost): containers 1, 2 + load balancer
+#  - Node 2 (webserver2): container 3
+#
+#  Load balancer routes traffic to all three via direct ports (9001, 9002)
+#  and remote IP to webserver2:9001 (internal port).
 #
 # ═══════════════════════════════════════════════════════════════════
 
 - name: Deploy Web Profile Stack
   hosts: webservers
-  become: yes         # run tasks as root (required for Docker install)
+  become: yes # run tasks as root (required for Docker install)
 
   # ── Variables ────────────────────────────────────────────────────
   vars:
-    lb_port:   9000   # public-facing port
-    app1_port: 9001   # app container 1 debug port
-    app2_port: 9002   # app container 2 debug port
+    lb_port: 9000 # public-facing port (only on localhost)
+    app1_port: 9001 # app container 1 debug port (localhost)
+    app2_port: 9002 # app container 2 debug port (localhost)
+    app3_port: 9003 # app container 3 debug port (webserver2)
 
   # ── Roles (executed in order) ────────────────────────────────────
   roles:
     # - docker_install  # Ensure Docker is installed
-    - build_app       # Copy source & build image
-    - deploy_app      # Launch the two app containers
-    - deploy_lb       # Launch the Nginx load balancer
+    - build_app # Copy source & build image
+    - deploy_app # Launch the two app containers
+    - deploy_lb # Launch the Nginx load balancer
 
   # ── Final summary ────────────────────────────────────────────────
   post_tasks:
@@ -43,4 +50,5 @@
           - " Load Balancer : http://{{ inventory_hostname }}:{{ lb_port }}"
           - " Container 1   : http://{{ inventory_hostname }}:{{ app1_port }}"
           - " Container 2   : http://{{ inventory_hostname }}:{{ app2_port }}"
+          - " Container 3   : http://{{ hostvars['webserver2'].get('ansible_host', 'localhost') }}:{{ app3_port }}"
           - "════════════════════════════════════════"

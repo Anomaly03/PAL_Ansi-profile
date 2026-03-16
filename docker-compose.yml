@@ -8,7 +8,6 @@
 # ═══════════════════════════════════════════════════════════════════
 
 services:
-
   # ── Web App Container 1 ─────────────────────────────────────────
   webprofile_1:
     build:
@@ -38,6 +37,23 @@ services:
       - "9002:8080"
     networks:
       - webprofile_net
+
+  # ── Web App Container 3 (Reference for Ansible deployment) ────────────
+  # This container is deployed via Ansible to webserver2 (remote node)
+  # For local testing, uncomment and customize the host/port:
+  # webprofile_3:
+  #   build:
+  #     context: ./app
+  #     dockerfile: Dockerfile
+  #   container_name: webprofile_3
+  #   restart: always
+  #   environment:
+  #     - CONTAINER_NAME=webprofile_3
+  #     - PORT=8080
+  #   ports:
+  #     - "9003:8080"
+  #   networks:
+  #     - webprofile_net
 
   # ── Nginx Load Balancer ─────────────────────────────────────────
   webprofile_lb:

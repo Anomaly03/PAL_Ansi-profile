@@ -1,20 +1,20 @@
 ---
 # ─────────────────────────────────────────────────────────────────
 # Role: build_app
-# Tasks: Copy source code to host and build the Docker image
+# Tasks: Copy source code to ALL nodes and build Docker image
 # ─────────────────────────────────────────────────────────────────
 
 - name: Create remote directory for app source
   file:
     path: /opt/webprofile/app
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy application source files to target host
   copy:
-    src: "{{ playbook_dir }}/../app/"   # path relative to playbook
+    src: "{{ playbook_dir }}/../app/" # path relative to playbook
     dest: /opt/webprofile/app/
-    mode: '0644'
+    mode: "0644"
 
 - name: Build Docker image from source
   community.docker.docker_image:
@@ -28,4 +28,4 @@
 
 - name: Show build result
   debug:
-    msg: "Image build status: {{ build_result.changed | ternary('Rebuilt', 'No change') }}"
+    msg: "{{ inventory_hostname }} → Image build status: {{ build_result.changed | ternary('Rebuilt', 'No change') }}"
