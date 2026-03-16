@@ -10,7 +10,7 @@
 
 **Anggota:** 
 1. Muhammad Farid Ramdhani  - 235150207111018
-2. Muhammad Fatih Satrio    - 
+2. Muhammad Fatih Satrio    - 235150200111018
 ---
 
 ## 📋 Daftar Isi
