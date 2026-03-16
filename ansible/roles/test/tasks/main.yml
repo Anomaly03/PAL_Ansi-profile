@@ -19,7 +19,7 @@
 - name: Fail if unhealthy
   fail:
     msg: "Health check failed: {{ health.content }}"
-  when: health.status != 200 or health.content != "Load balancer is healthy"
+  when: health.status != 200 or health.content | trim != "Load balancer is healthy"
 
 - name: Initialize container list
   set_fact:
@@ -40,7 +40,7 @@
 
 - name: Aggregate unique containers
   set_fact:
-    all_containers: "{{ all_containers + (server_info.json | map(attribute='container') | list) }}"
+    all_containers: "{{ (all_containers | default([])) + (server_info.json | default([]) | map(attribute='container') | list) }}"
 
 - name: Fail if fewer than 3 unique containers
   fail:
