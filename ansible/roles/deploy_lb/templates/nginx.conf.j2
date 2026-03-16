@@ -1,0 +1,66 @@
+# ───────────────────────────────────────────────────────
+# nginx.conf — Load Balancer Configuration (Jinja2 Template)
+# ───────────────────────────────────────────────────────
+# This Nginx acts as a reverse-proxy / load balancer
+# that distributes traffic between web containers.
+# ───────────────────────────────────────────────────────
+
+events {
+    worker_connections 1024;
+}
+
+http {
+
+    # ── Upstream pool (backend containers) ──
+    upstream webprofile_cluster {
+        # Round-robin is the default; Nginx will alternate
+        # requests between the servers automatically.
+        server webprofile_1:8080;      # Container 1 (localhost)
+        server webprofile_2:8080;      # Container 2 (localhost)
+{%- if groups['webservers'] | length > 1 %}
+        {%- if 'ansible_host' in hostvars[groups['webservers'][1]] %}
+        # Remote webserver2 accessed via IP:port
+        server {{ hostvars[groups['webservers'][1]]['ansible_host'] }}:9001;
+        {%- else %}
+        # Local webserver2 (same machine) - accessible via docker network
+        server webprofile_3:8080;
+        {%- endif %}
+{%- endif %}
+    }
+
+    # ── Access log format ──
+    log_format main '$remote_addr - [$time_local] "$request" '
+                    '$status $body_bytes_sent '
+                    '"$http_referer" upstream=$upstream_addr';
+
+    # ── HTTP Server Block ──
+    server {
+        listen 80;
+        server_name _;
+
+        access_log /var/log/nginx/access.log main;
+        error_log  /var/log/nginx/error.log warn;
+
+        # Health check endpoint for the load balancer itself
+        location /lb-health {
+            return 200 "Load balancer is healthy\n";
+            add_header Content-Type text/plain;
+        }
+
+        # Proxy all traffic to the backend cluster
+        location / {
+            proxy_pass         http://webprofile_cluster;
+            proxy_http_version 1.1;
+
+            proxy_set_header   Host              $host;
+            proxy_set_header   X-Real-IP         $remote_addr;
+            proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+            proxy_set_header   X-Forwarded-Proto $scheme;
+
+            # Timeouts
+            proxy_connect_timeout 5s;
+            proxy_send_timeout    30s;
+            proxy_read_timeout    30s;
+        }
+    }
+}

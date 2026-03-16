@@ -18,7 +18,7 @@
     networks:
       - name: webprofile_net
     ports:
-      - "9001:8080"          # port 9001 on host → 8080 in container
+      - "9001:8080" # port 9001 on host → 8080 in container
     env:
       CONTAINER_NAME: "webprofile_1"
       PORT: "8080"
@@ -32,18 +32,38 @@
     networks:
       - name: webprofile_net
     ports:
-      - "9002:8080"          # port 9002 on host → 8080 in container
+      - "9002:8080" # port 9002 on host → 8080 in container
     env:
       CONTAINER_NAME: "webprofile_2"
       PORT: "8080"
 
+- name: Start web container 3 (webprofile_3) - on webserver2 only
+  community.docker.docker_container:
+    name: webprofile_3
+    image: webprofile:latest
+    state: started
+    restart_policy: always
+    networks:
+      - name: webprofile_net
+    ports:
+      - "9003:8080" # port 9003 on host → 8080 in container (for localhost testing)
+    env:
+      CONTAINER_NAME: "webprofile_3"
+      PORT: "8080"
+  when: inventory_hostname != 'localhost'
+
 - name: Verify containers are running
   community.docker.docker_container_info:
     name: "{{ item }}"
-  loop:
-    - webprofile_1
-    - webprofile_2
+  loop: "{{ container_list }}"
   register: container_info
+  vars:
+    container_list: |
+      {%- if inventory_hostname == 'localhost' -%}
+        ['webprofile_1', 'webprofile_2']
+      {%- else -%}
+        ['webprofile_3']
+      {%- endif -%}
 
 - name: Print container status
   debug:
