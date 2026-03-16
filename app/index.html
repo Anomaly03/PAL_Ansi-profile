@@ -1,146 +1,167 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Web Profile - Ansible Docker Demo</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header>
-    <nav>
-      <div class="logo">MyProfile</div>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Profile - Ansible Docker Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">MyProfile</div>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
 
-  <section class="hero">
-    <div class="hero-content">
-      <img src="https://avatars.githubusercontent.com/u/9919?s=200" alt="Avatar" class="avatar"/>
-      <h1>Hello, I'm <span class="highlight">Super Admin</span></h1>
-      <p class="subtitle">Undergraduate Student · Computer Science · Universitas XYZ</p>
-      <a href="#contact" class="btn">Get in Touch</a>
-    </div>
-  </section>
+    <section class="hero">
+      <div class="hero-content">
+        <img
+          src="https://avatars.githubusercontent.com/u/9919?s=200"
+          alt="Avatar"
+          class="avatar"
+        />
+        <h1>Hello, I'm <span class="highlight">Farid & Satrio </span></h1>
+        <p class="subtitle">
+          Undergraduate Student · Computer Science · Universitas XYZ
+        </p>
+        <a href="#contact" class="btn">Get in Touch</a>
+      </div>
+    </section>
 
-  <section id="about" class="section">
-    <div class="container">
-      <h2>About Me</h2>
+    <section id="about" class="section">
+      <div class="container">
+        <h2>About Me</h2>
+        <p>
+          I'm a 3rd-year Computer Science student passionate about software
+          engineering, cloud computing, and DevOps. I enjoy building scalable
+          systems and learning about automation tools like
+          <strong>Ansible</strong> and <strong>Docker</strong>.
+        </p>
+        <div class="info-banner" id="server-info">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="section alt-bg">
+      <div class="container">
+        <h2>Skills</h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <span class="icon">🐧</span>
+            <h3>Linux</h3>
+            <p>Ubuntu, CentOS, shell scripting</p>
+          </div>
+          <div class="skill-card">
+            <span class="icon">🐳</span>
+            <h3>Docker</h3>
+            <p>Containerisation, Dockerfile, Compose</p>
+          </div>
+          <div class="skill-card">
+            <span class="icon">⚙️</span>
+            <h3>Ansible</h3>
+            <p>Playbooks, roles, inventory</p>
+          </div>
+          <div class="skill-card">
+            <span class="icon">🌐</span>
+            <h3>Web Dev</h3>
+            <p>HTML, CSS, JavaScript, Python</p>
+          </div>
+          <div class="skill-card">
+            <span class="icon">🗄️</span>
+            <h3>Databases</h3>
+            <p>MySQL, PostgreSQL, Redis</p>
+          </div>
+          <div class="skill-card">
+            <span class="icon">🔁</span>
+            <h3>CI/CD</h3>
+            <p>GitHub Actions, Jenkins</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <div class="container">
+        <h2>Projects</h2>
+        <div class="projects-grid">
+          <div class="project-card">
+            <h3>🛒 E-Commerce App</h3>
+            <p>
+              A full-stack online store built with Flask and PostgreSQL,
+              deployed using Docker Compose.
+            </p>
+            <span class="tag">Python</span>
+            <span class="tag">Flask</span>
+            <span class="tag">Docker</span>
+          </div>
+          <div class="project-card">
+            <h3>📊 Student Grade Portal</h3>
+            <p>
+              Web app for managing student grades with role-based access
+              control.
+            </p>
+            <span class="tag">PHP</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">Bootstrap</span>
+          </div>
+          <div class="project-card">
+            <h3>🤖 Ansible Auto-Deploy</h3>
+            <p>
+              This very demo — automated deployment of a web profile using
+              Ansible and Docker with load balancing.
+            </p>
+            <span class="tag">Ansible</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Nginx</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section alt-bg">
+      <div class="container">
+        <h2>Contact</h2>
+        <p>Feel free to reach out for collaboration or questions!</p>
+        <div class="contact-links">
+          <a href="mailto:superadmin@example.com" class="contact-btn"
+            >📧 superadmin@example.com</a
+          >
+          <a href="https://github.com" class="contact-btn">🐙 GitHub</a>
+          <a href="https://linkedin.com" class="contact-btn">💼 LinkedIn</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
       <p>
-        I'm a 3rd-year Computer Science student passionate about software engineering,
-        cloud computing, and DevOps. I enjoy building scalable systems and learning
-        about automation tools like <strong>Ansible</strong> and <strong>Docker</strong>.
+        © 2026 Super Admin · Built with HTML, CSS &amp; deployed via Ansible +
+        Docker
       </p>
-      <div class="info-banner" id="server-info">
-        <!-- Filled dynamically -->
-      </div>
-    </div>
-  </section>
+    </footer>
 
-  <section id="skills" class="section alt-bg">
-    <div class="container">
-      <h2>Skills</h2>
-      <div class="skills-grid">
-        <div class="skill-card">
-          <span class="icon">🐧</span>
-          <h3>Linux</h3>
-          <p>Ubuntu, CentOS, shell scripting</p>
-        </div>
-        <div class="skill-card">
-          <span class="icon">🐳</span>
-          <h3>Docker</h3>
-          <p>Containerisation, Dockerfile, Compose</p>
-        </div>
-        <div class="skill-card">
-          <span class="icon">⚙️</span>
-          <h3>Ansible</h3>
-          <p>Playbooks, roles, inventory</p>
-        </div>
-        <div class="skill-card">
-          <span class="icon">🌐</span>
-          <h3>Web Dev</h3>
-          <p>HTML, CSS, JavaScript, Python</p>
-        </div>
-        <div class="skill-card">
-          <span class="icon">🗄️</span>
-          <h3>Databases</h3>
-          <p>MySQL, PostgreSQL, Redis</p>
-        </div>
-        <div class="skill-card">
-          <span class="icon">🔁</span>
-          <h3>CI/CD</h3>
-          <p>GitHub Actions, Jenkins</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects" class="section">
-    <div class="container">
-      <h2>Projects</h2>
-      <div class="projects-grid">
-        <div class="project-card">
-          <h3>🛒 E-Commerce App</h3>
-          <p>A full-stack online store built with Flask and PostgreSQL, deployed using Docker Compose.</p>
-          <span class="tag">Python</span>
-          <span class="tag">Flask</span>
-          <span class="tag">Docker</span>
-        </div>
-        <div class="project-card">
-          <h3>📊 Student Grade Portal</h3>
-          <p>Web app for managing student grades with role-based access control.</p>
-          <span class="tag">PHP</span>
-          <span class="tag">MySQL</span>
-          <span class="tag">Bootstrap</span>
-        </div>
-        <div class="project-card">
-          <h3>🤖 Ansible Auto-Deploy</h3>
-          <p>This very demo — automated deployment of a web profile using Ansible and Docker with load balancing.</p>
-          <span class="tag">Ansible</span>
-          <span class="tag">Docker</span>
-          <span class="tag">Nginx</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="section alt-bg">
-    <div class="container">
-      <h2>Contact</h2>
-      <p>Feel free to reach out for collaboration or questions!</p>
-      <div class="contact-links">
-        <a href="mailto:superadmin@example.com" class="contact-btn">📧 superadmin@example.com</a>
-        <a href="https://github.com" class="contact-btn">🐙 GitHub</a>
-        <a href="https://linkedin.com" class="contact-btn">💼 LinkedIn</a>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <p>© 2026 Super Admin · Built with HTML, CSS &amp; deployed via Ansible + Docker</p>
-  </footer>
-
-  <script>
-    // Display which container/server is serving this request
-    fetch('/server-info')
-      .then(res => res.json())
-      .then(data => {
-        const banner = document.getElementById('server-info');
-        banner.innerHTML = `
+    <script>
+      // Display which container/server is serving this request
+      fetch("/server-info")
+        .then((res) => res.json())
+        .then((data) => {
+          const banner = document.getElementById("server-info");
+          banner.innerHTML = `
           <p>🖥️ <strong>Served by:</strong> Container <code>${data.container}</code>
              &nbsp;|&nbsp; Hostname: <code>${data.hostname}</code>
              &nbsp;|&nbsp; Server IP: <code>${data.ip}</code></p>
         `;
-      })
-      .catch(() => {
-        document.getElementById('server-info').innerHTML =
-          '<p>⚡ Running in static mode (no server-info endpoint)</p>';
-      });
-  </script>
-</body>
+        })
+        .catch(() => {
+          document.getElementById("server-info").innerHTML =
+            "<p>⚡ Running in static mode (no server-info endpoint)</p>";
+        });
+    </script>
+  </body>
 </html>

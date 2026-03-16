@@ -27,7 +27,7 @@
 
   # ── Roles (executed in order) ────────────────────────────────────
   roles:
-    - docker_install  # Ensure Docker is installed
+    # - docker_install  # Ensure Docker is installed
     - build_app       # Copy source & build image
     - deploy_app      # Launch the two app containers
     - deploy_lb       # Launch the Nginx load balancer
