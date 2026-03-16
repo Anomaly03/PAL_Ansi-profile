@@ -1,0 +1,42 @@
+---
+# ─────────────────────────────────────────────────────────────────
+# Role: test
+# Tasks: test load balancer health and round-robin functionality
+# ─────────────────────────────────────────────────────────────────
+
+- name: Call health check endpoint
+  uri:
+    url: http://localhost:9000/lb-health
+    status_code: 200
+  register: health
+
+- name: Fail if unhealthy
+  fail:
+    msg: "Health check failed"
+  when: health.status != 200 or health.content != "Load balancer is healthy"
+
+- name: Initialize container list
+  set_fact:
+    all_containers: []
+
+- name: Call server-info multiple times
+  uri:
+    url: http://localhost:9000/server-info
+    return_content: yes
+    status_code: 200
+  register: server_info
+  retries: 5
+  delay: 2
+  until: server_info.json is defined
+  loop: "{{ range(5) | list }}"
+  loop_control:
+    loop_var: _
+
+- name: Aggregate unique containers
+  set_fact:
+    all_containers: "{{ all_containers + (server_info.json | map(attribute='container') | list) }}"
+
+- name: Fail if fewer than 3 unique containers
+  fail:
+    msg: "Less than 3 unique containers seen ({{ all_containers | unique | length }})"
+  when: (all_containers | unique | length) < 3
