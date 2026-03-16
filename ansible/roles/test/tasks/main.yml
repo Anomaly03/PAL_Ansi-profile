@@ -40,9 +40,9 @@
 
 - name: Aggregate unique containers
   set_fact:
-    all_containers: "{{ (all_containers | default([])) + (server_info.json | default([]) | map(attribute='container') | list) }}"
+    unique_containers: "{{ server_info.results | map(attribute='json') | list | map(attribute='container') | unique | list }}"
 
 - name: Fail if fewer than 3 unique containers
   fail:
-    msg: "Less than 3 unique containers seen ({{ all_containers | unique | length }})"
-  when: (all_containers | unique | length) < 3
+    msg: "Less than 3 unique containers seen ({{ unique_containers | length }})"
+  when: (unique_containers | length) < 3
